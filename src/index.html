@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
     <title>Neighborhood Map Project</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
+
 </head>
 <body>
     <div id="searchBox"></div>
     <div id="list"></div>
     <div id="map"></div>
-    <script type='text/javascript' src='../knockout-3.4.0.js'></script>
+
+    <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+    <!-- <script type='text/javascript' src='js/knockout-3.4.0.js'></script> -->
+    <script type='text/javascript' src='js/app.js'></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBI_y-x_J8MWvtvFhQ8h8ID5cTYkrJaURY&libraries=places&callback=initMap"
+    async defer></script>
+
 </body>
 </html>
