@@ -1,5 +1,4 @@
-var data = {
-    places: [
+var places = [
     {
         name      : 'Adelitas',
         location  : 'Denver, CO'
@@ -25,15 +24,27 @@ var data = {
         location  : 'Denver, CO'
     },
     {
-        name      : 'Uno Mas',
+        name      : 'Devils Food',
         location  : 'Denver, CO'
     }
-]};
+];
 
-// Inside the view model constructor function is where to write most of the
-// code to handle data-binding the list on the page with the data points.
-var myViewModel = function(data) {
-    var self = this;
-    self.name = data.places.name;
-    self.location = data.places.location;
+var Place = function(data) {
+    this.name = ko.observable(data.name);
+    this.location = ko.observable(data.location);
+    // this.marker = 
 }
+
+function myViewModel() {
+    var self = this;
+    this.placeList = ko.observableArray([]);
+    places.forEach(function(e){
+        self.placeList.push(new Place(e));
+    });
+
+    this.currentPlace = ko.observable(this.placeList()[0]);
+    this.setCurrentPlace = function(e) {
+        self.currentPlace(e);
+    }
+};
+ko.applyBindings(new myViewModel());

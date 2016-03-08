@@ -9,7 +9,9 @@
 </head>
 <body>
     <div id="searchBox"></div>
-    <div id="list"></div>
+    <ul data-bind="foreach: placeList" id="list">
+      <li data-bind="text: name, click: $parent.setCurrentPlace"></li>
+    </ul>
     <div id="map"></div>
 
     <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
