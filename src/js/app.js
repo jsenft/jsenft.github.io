@@ -1,50 +1,58 @@
 var places = [
     {
-        name      : 'Adelitas',
-        location  : 'Denver, CO'
+        name      : 'Adelitas Cocina Y Cantina',
+        lat       : 39.693269,
+        lng       : -104.987079
     },
     {
         name      : 'The Hornet',
-        location  : 'Denver, CO'
+        lat       : 39.718130,
+        lng       : -104.987261
     },
     {
         name      : 'Sushi Den',
-        location  : 'Denver, CO'
+        lat       : 39.689548,
+        lng       : -104.980744
     },
     {
         name      : 'Kaos Pizzaria',
-        location  : 'Denver, CO'
+        lat       : 39.69048,
+        lng       : -104.980636
     },
     {
-        name      : 'Park Burger',
-        location  : 'Denver, CO'
+        name      : 'Park Burger Pearl',
+        lat       : 39.682267,
+        lng       : -104.980374
     },
     {
         name      : 'Gaia Bistro',
-        location  : 'Denver, CO'
+        lat       : 39.688423,
+        lng       : -104.980606
     },
     {
         name      : 'Devils Food',
-        location  : 'Denver, CO'
+        lat       : 39.697947,
+        lng       : -104.961488
     }
 ];
 
 var Place = function(data) {
     this.name = ko.observable(data.name);
-    this.location = ko.observable(data.location);
-    // this.marker = 
+    this.lat = ko.observable(data.lat);
+    this.lng = ko.observable(data.lng);
 }
 
-function myViewModel() {
+var myViewModel = function() {
+
     var self = this;
-    this.placeList = ko.observableArray([]);
-    places.forEach(function(e){
-        self.placeList.push(new Place(e));
+    self.placeList = ko.observableArray([]);
+    places.forEach(function(item) {
+        self.placeList.push(new Place(item));
     });
 
     this.currentPlace = ko.observable(this.placeList()[0]);
     this.setCurrentPlace = function(e) {
         self.currentPlace(e);
     }
-};
+}
 ko.applyBindings(new myViewModel());
