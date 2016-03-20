@@ -54,6 +54,11 @@ var myViewModel = function() {
         self.placeList.push(new Place(item));
     });
 
+    this.currentPlace = ko.observable(this.placeList()[0]);
+    this.setCurrentPlace = function(item) {
+        self.currentPlace(item);
+    }
+
     initMap = function() {
 
         var denCenter = {lat: 39.695, lng: -104.991};
@@ -64,27 +69,30 @@ var myViewModel = function() {
 
         var infowindow = new google.maps.InfoWindow();
         var marker, i, currentMarker;
+        var markersArray = [];
 
-            for ( i = 0; i < this.model.places.length; i++) {
-                var data = this.model.places[i];
-                var location = new google.maps.LatLng(data.lat, data.lng);
-                marker = new google.maps.Marker( {
-                    map: map,
-                    position: location,
-                    title: data.name
-                });
-            }
+        for ( i = 0; i < this.model.places.length; i++) {
+            var data = this.model.places[i];
+            var location = new google.maps.LatLng(data.lat, data.lng);
+            marker = new google.maps.Marker( {
+                map: map,
+                position: location,
+                title: data.name
+            });
             marker.addListener('click', function() {
                 currentMarker = this.marker;
                 infowindow.open(map, this.marker);
+                toggleBounce();
             });
-            function toggleBounce() {
-                if (marker.getAnimation() !== null) {
-                    marker.setAnimation(null);
-                } else {
-                    marker.setAnimation(google.maps.Animation.BOUNCE);
-                }
+        }
+
+        function toggleBounce() {
+            if (marker.getAnimation() !== null) {
+                marker.setAnimation(null);
+            } else {
+                marker.setAnimation(google.maps.Animation.BOUNCE);
             }
+        }
     }
 }
 ko.applyBindings(new myViewModel());
