@@ -1,98 +1,94 @@
-var model = {
-    places : [
-        {
-            name      : 'Adelitas Cocina Y Cantina',
-            lat       : 39.693269,
-            lng       : -104.987079
-        },
-        {
-            name      : 'The Hornet',
-            lat       : 39.718130,
-            lng       : -104.987261
-        },
-        {
-            name      : 'Sushi Den',
-            lat       : 39.689548,
-            lng       : -104.980744
-        },
-        {
-            name      : 'Kaos Pizzaria',
-            lat       : 39.69048,
-            lng       : -104.980636
-        },
-        {
-            name      : 'Park Burger Pearl',
-            lat       : 39.682267,
-            lng       : -104.980374
-        },
-        {
-            name      : 'Gaia Bistro',
-            lat       : 39.688423,
-            lng       : -104.980606
-        },
-        {
-            name      : 'Devils Food',
-            lat       : 39.697947,
-            lng       : -104.961488
-        }
-    ]
-};
+var places = [
+    {
+        name      : 'Adelitas Cocina Y Cantina',
+        latlng    : {lat: 39.693269, lng: -104.987079}
+    },
+    {
+        name      : 'The Hornet',
+        latlng    : {lat: 39.718130, lng: -104.987261}
+    },
+    {
+        name      : 'Sushi Den',
+        latlng    : {lat: 39.689548, lng: -104.980744}
+    },
+    {
+        name      : 'Kaos Pizzaria',
+        latlng    : {lat: 39.69048, lng: -104.980636}
+    },
+    {
+        name      : 'Park Burger Pearl',
+        latlng    : {lat: 39.682267, lng: -104.980374}
+    },
+    {
+        name      : 'Gaia Bistro',
+        latlng    : {lat: 39.688423, lng: -104.980606}
+    },
+    {
+        name      : 'Devils Food',
+        latlng    : {lat: 39.697947, lng: -104.961488}
+    }
+];
 
+var map;
 
-var Place = function(data) {
-    this.name = ko.observable(data.name);
-    this.lat = ko.observable(data.lat);
-    this.lng = ko.observable(data.lng);
+function initMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 39.695, lng: -104.991},
+        zoom: 14,
+    });
 }
 
-var myViewModel = function() {
+function Place(item) {
+    this.name = ko.observable(item.name);
+    this.latlng = ko.observable(item.latlng);
+}
 
+function myViewModel() {
     var self = this;
+    self.markers = [];
 
-    this.placeList = ko.observableArray();
-    model.places.forEach(function(item) {
+    self.placeList = ko.observableArray();
+    places.forEach(function(item) {
         self.placeList.push(new Place(item));
     });
 
-    this.currentPlace = ko.observable(this.placeList()[0]);
-    this.setCurrentPlace = function(item) {
+    self.currentPlace = ko.observable(self.placeList()[0]);
+    self.setCurrentPlace = function(item) {
         self.currentPlace(item);
     }
 
-    initMap = function() {
+    self.allPlaces = ko.observableArray(places.slice());
 
-        var denCenter = {lat: 39.695, lng: -104.991};
-        var map = new google.maps.Map(document.getElementById('map'), {
-            center: denCenter,
-            zoom: 14,
+    self.allPlaces().forEach(function(item) {
+        marker = new google.maps.Marker( {
+            map: map,
+            position: item.latlng,
+            title: item.name
         });
+        markers.push(marker);
+    });
 
-        var infowindow = new google.maps.InfoWindow();
-        var marker, i, currentMarker;
-        var markersArray = [];
+    self.markers.map(function(item) {
+        var infWin = new google.maps.InfoWindow({
+            content: "Test",
+            title: item.name
+        });
+        item.addListener('click', function() {
+            infWin.open(map, this),
+            item.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(function() {
+                item.setAnimation(null)
+            }, 1500);
+        });
+    });
 
-        for ( i = 0; i < this.model.places.length; i++) {
-            var data = this.model.places[i];
-            var location = new google.maps.LatLng(data.lat, data.lng);
-            marker = new google.maps.Marker( {
-                map: map,
-                position: location,
-                title: data.name
-            });
-            marker.addListener('click', function() {
-                currentMarker = this.marker;
-                infowindow.open(map, this.marker);
-                toggleBounce();
-            });
-        }
-
-        function toggleBounce() {
-            if (marker.getAnimation() !== null) {
-                marker.setAnimation(null);
-            } else {
-                marker.setAnimation(google.maps.Animation.BOUNCE);
-            }
-        }
+    self.listClick = function(item) {
+        google.maps.event.trigger(markers[item - 1], 'click');
     }
 }
-ko.applyBindings(new myViewModel());
+
+// ko.applyBindings(new myViewModel());
+
+$(document).ready(function() {
+    ko.applyBindings(myViewModel);
+});
