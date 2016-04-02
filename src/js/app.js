@@ -29,7 +29,7 @@ var places = [
     }
 ];
 
-var map;
+var map, infWin, marker;
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -38,26 +38,26 @@ function initMap() {
     });
 }
 
-function Place(item) {
-    this.name = ko.observable(item.name);
-    this.latlng = ko.observable(item.latlng);
-}
+// function Place(item) {
+//     this.name = ko.observable(item.name);
+//     this.latlng = ko.observable(item.latlng);
+// }
 
 function myViewModel() {
     var self = this;
     self.markers = [];
 
-    self.placeList = ko.observableArray();
-    places.forEach(function(item) {
-        self.placeList.push(new Place(item));
-    });
+    // self.placeList = ko.observableArray();
+    // places.forEach(function(item) {
+    //     self.placeList.push(new Place(item));
+    // });
 
-    self.currentPlace = ko.observable(self.placeList()[0]);
-    self.setCurrentPlace = function(item) {
-        self.currentPlace(item);
-    }
+    // self.currentPlace = ko.observable(self.placeList()[0]);
+    // self.setCurrentPlace = function(item) {
+    //     self.currentPlace(item);
+    // }
 
-    self.allPlaces = ko.observableArray(places.slice());
+    self.allPlaces = ko.observableArray(places);
 
     self.allPlaces().forEach(function(item) {
         marker = new google.maps.Marker( {
@@ -65,11 +65,12 @@ function myViewModel() {
             position: item.latlng,
             title: item.name
         });
-        markers.push(marker);
+        item.marker = marker;
+        this.markers.push(marker);
     });
 
     self.markers.map(function(item) {
-        var infWin = new google.maps.InfoWindow({
+        infWin = new google.maps.InfoWindow({
             content: "Test",
             title: item.name
         });
@@ -83,8 +84,19 @@ function myViewModel() {
     });
 
     self.listClick = function(item) {
-        google.maps.event.trigger(markers[item - 1], 'click');
+        if (this.name) {
+          item.marker.setAnimation(google.maps.Animation.DROP);
+          infWin.open(map, item.marker);
+        }
     }
+
+    self.query = ko.observable('');
+
+    self.search = ko.computed(function() {
+        return ko.utils.arrayFilter(self.allPlaces(), function(listResult) {
+            return listResult.name.toLowerCase().indexOf(self.query().toLowerCase()) >= 0;
+        });
+    });
 }
 
 // ko.applyBindings(new myViewModel());
