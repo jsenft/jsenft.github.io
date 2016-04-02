@@ -10,7 +10,7 @@
 </head>
 <body>
     <input type="search" placeholder="Search Location" size="35" data-bind="textInput: query, valueUpdate: 'keyup'"/>
-    <ul data-bind="foreach: allPlaces" id="list">
+    <ul data-bind="foreach: search" id="list">
       <li data-bind="text: $data.name, click: $parent.listClick"></li>
     </ul>
     <div id="map"></div>

@@ -84,17 +84,6 @@ var myViewModel = function() {
               }
           });
       }, self);
-
-      // self.search.subscribe(function() {
-      //     var tempArray = ko.utils.compareArrays(self.allPlaces(), self.query());
-      //     ko.utils.arrayForEach(tempArray, function(item) {
-      //         if (item.status === 'deleted') {
-      //             item.value.setMap(null);
-      //         } else {
-      //             item.value.setMap(map);
-      //         }
-      //     });
-      // });
     }();
 }
 
