@@ -9,7 +9,7 @@
 
 </head>
 <body>
-    <input type="search" placeholder="Search Location" size="35" data-bind="textInput: query, valueUpdate: 'keyup'"/>
+    <input type="search" placeholder="Search Location" size="40" data-bind="textInput: query, valueUpdate: 'keyup'"/>
     <ul data-bind="foreach: search" id="list">
       <li data-bind="text: $data.name, click: $parent.listClick"></li>
     </ul>
@@ -18,8 +18,7 @@
     <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script> -->
     <script type='text/javascript' src='js/knockout-3.4.0.js'></script>
+    <script type='text/javascript' src='js/oauth-signature.js'></script>
     <script type='text/javascript' src='js/app1.js'></script>
-    <!-- <script>initMap();</script> -->
-
 </body>
 </html>
