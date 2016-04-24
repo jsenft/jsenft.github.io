@@ -1,37 +1,37 @@
 var places = [
     {
         name      : 'Adelitas Cocina Y Cantina',
-        address   : '',
+        id        : 'B5GgKhPREBgipv8kfSOluw',
         latlng    : {lat: 39.693269, lng: -104.987079}
     },
     {
         name      : 'The Hornet',
-        address   : '',
+        id        : 'QmgLDVzZl_91e3-GceV-5w',
         latlng    : {lat: 39.718130, lng: -104.987261}
     },
     {
         name      : 'Sushi Den',
-        address   : '',
+        id        : '8lKL5Bxt620aqh0ulDByIg',
         latlng    : {lat: 39.689548, lng: -104.980744}
     },
     {
         name      : 'Kaos Pizzaria',
-        address   : '',
+        id        : 't2xnzRv93FTEvDnWQxYBkg',
         latlng    : {lat: 39.69048, lng: -104.980636}
     },
     {
         name      : 'Park Burger Pearl',
-        address   : '',
+        id        : 'JSNizJSuj0gZ594nBXhVWQ',
         latlng    : {lat: 39.682267, lng: -104.980374}
     },
     {
         name      : 'Gaia Bistro',
-        address   : '',
+        id        : 'NztM8WhkcZiHyn_NGqWN5Q',
         latlng    : {lat: 39.688423, lng: -104.980606}
     },
     {
         name      : 'Devils Food',
-        address   : '',
+        id        : '4DE8RY7jkako7ADqpnAd3w',
         latlng    : {lat: 39.697947, lng: -104.961488}
     }
 ];
@@ -48,6 +48,9 @@ var myViewModel = function() {
           center: {lat: 39.695, lng: -104.991},
           zoom: 14,
       });
+      google.maps.event.addListener(map,'click',function() {
+          infWin.close();
+      });
 
       self.allPlaces().forEach(function(item) {
           marker = new google.maps.Marker( {
@@ -60,13 +63,12 @@ var myViewModel = function() {
       });
 
       self.markers.map(function(item) {
-          var contentString = 'Test';
           infWin = new google.maps.InfoWindow({
-              content: contentString,
               title: item.name
           });
           item.addListener('click', function() {
-              infWin.setContent(this.content)
+              var myHTML = "Test!";
+              infWin.setContent("<div style='width:150px; text-align: center;'>"+myHTML+"</div>")
               infWin.open(map, this),
               item.setAnimation(google.maps.Animation.BOUNCE);
               setTimeout(function() {
@@ -77,7 +79,10 @@ var myViewModel = function() {
 
       self.listClick = function(item) {
           if (this.name) {
-            item.marker.setAnimation(google.maps.Animation.DROP);
+            item.marker.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(function() {
+                item.marker.setAnimation(null)
+            }, 1500);
             infWin.open(map, item.marker);
           }
       }
@@ -100,7 +105,7 @@ var myViewModel = function() {
 
       var parameters = {
           term: '',
-          location: 'Denver CO',
+          location: 'Denver+CO',
           oauth_consumer_key: 'PHjRa8XxHyGkomr4Pk3CVQ',
           oauth_token: 'vcZOZB6BjS3ENdun266bc05nAxlBOKWz',
           oauth_nonce: nonce_generate(),
@@ -109,7 +114,7 @@ var myViewModel = function() {
           callback: 'cb',
       }
       // var url = 'https://api.yelp.com/v2/search?';
-      var url = 'https://api.yelp.com/business?' + self.allPlaces().latlng;
+      var url = 'https://api.yelp.com/v2/business/' + places[0].id;
       var encodedSignature = oauthSignature.generate('GET', url, parameters, 'GfVqiQ93A_VPJ6Ir5H93FYBJtkE', 'vk1WWobdGt7kfeXPiS9YWt0NGZo');
       parameters.oauth_signature = encodedSignature;
 
@@ -120,6 +125,8 @@ var myViewModel = function() {
           dataType: 'jsonp',
           success: function(results) {
               console.log("SUCCESS! %o", results);
+              // infWin.setContent(results);
+              // infWin.open(map, marker);
           },
           error: function(results) {
               console.log("error %o", results);
