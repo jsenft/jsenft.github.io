@@ -52,6 +52,9 @@ var myViewModel = function() {
           infWin.close();
       });
 
+      var contentString = "<div style='width:150px; text-align: center;'>Data!</div>";
+
+
       self.allPlaces().forEach(function(item) {
           marker = new google.maps.Marker( {
               map: map,
@@ -64,11 +67,9 @@ var myViewModel = function() {
 
       self.markers.map(function(item) {
           infWin = new google.maps.InfoWindow({
-              title: item.name
+              content: contentString
           });
           item.addListener('click', function() {
-              var myHTML = "Test!";
-              infWin.setContent("<div style='width:150px; text-align: center;'>"+myHTML+"</div>")
               infWin.open(map, this),
               item.setAnimation(google.maps.Animation.BOUNCE);
               setTimeout(function() {
@@ -99,41 +100,38 @@ var myViewModel = function() {
           });
       }, self);
 
-      function nonce_generate() {
-          return (Math.floor(Math.random() * 1e12).toString());
-      };
+      var getYelp = function(item) {
+          function nonce_generate() {
+              return (Math.floor(Math.random() * 1e12).toString());
+          };
 
-      var parameters = {
-          term: '',
-          location: 'Denver+CO',
-          oauth_consumer_key: 'PHjRa8XxHyGkomr4Pk3CVQ',
-          oauth_token: 'vcZOZB6BjS3ENdun266bc05nAxlBOKWz',
-          oauth_nonce: nonce_generate(),
-          oauth_timestamp: Math.floor(Date.now() / 1000),
-          oauth_signature_method: 'HMAC-SHA1',
-          callback: 'cb',
-      }
-      // var url = 'https://api.yelp.com/v2/search?';
-      var url = 'https://api.yelp.com/v2/business/' + places[0].id;
-      var encodedSignature = oauthSignature.generate('GET', url, parameters, 'GfVqiQ93A_VPJ6Ir5H93FYBJtkE', 'vk1WWobdGt7kfeXPiS9YWt0NGZo');
-      parameters.oauth_signature = encodedSignature;
-
-      var settings = {
-          url: url,
-          data: parameters,
-          cache: true,
-          dataType: 'jsonp',
-          success: function(results) {
-              console.log("SUCCESS! %o", results);
-              // infWin.setContent(results);
-              // infWin.open(map, marker);
-          },
-          error: function(results) {
-              console.log("error %o", results);
+          var parameters = {
+              oauth_consumer_key: 'PHjRa8XxHyGkomr4Pk3CVQ',
+              oauth_token: 'vcZOZB6BjS3ENdun266bc05nAxlBOKWz',
+              oauth_nonce: nonce_generate(),
+              oauth_timestamp: Math.floor(Date.now() / 1000),
+              oauth_signature_method: 'HMAC-SHA1',
+              callback: 'cb',
           }
+          var url = 'https://api.yelp.com/v2/business/' + places[0].id;
+          var encodedSignature = oauthSignature.generate('GET', url, parameters, 'GfVqiQ93A_VPJ6Ir5H93FYBJtkE', 'vk1WWobdGt7kfeXPiS9YWt0NGZo');
+          parameters.oauth_signature = encodedSignature;
+
+          var settings = {
+              url: url,
+              data: parameters,
+              cache: true,
+              dataType: 'jsonp',
+              success: function(results) {
+                  console.log("SUCCESS! %o", results);
+                  // infWin.open(map, marker);
+              },
+              error: function(results) {
+                  console.log("error %o", results);
+              }
+          }
+          $.ajax(settings);
       }
-      $.ajax(settings);
     }();
 }
-
 ko.applyBindings(new myViewModel());
