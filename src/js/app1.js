@@ -52,9 +52,6 @@ var myViewModel = function() {
           infWin.close();
       });
 
-      var contentString = "<div style='width:150px; text-align: center;'>Data!</div>";
-
-
       self.allPlaces().forEach(function(item) {
           marker = new google.maps.Marker( {
               map: map,
@@ -67,10 +64,11 @@ var myViewModel = function() {
 
       self.markers.map(function(item) {
           infWin = new google.maps.InfoWindow({
-              content: contentString
+              content: ''
           });
           item.addListener('click', function() {
-              infWin.open(map, this),
+              getYelp();
+            //   infWin.open(map, this),
               item.setAnimation(google.maps.Animation.BOUNCE);
               setTimeout(function() {
                   item.setAnimation(null)
@@ -100,7 +98,7 @@ var myViewModel = function() {
           });
       }, self);
 
-      var getYelp = function(item) {
+      var getYelp = function() {
           function nonce_generate() {
               return (Math.floor(Math.random() * 1e12).toString());
           };
@@ -124,10 +122,19 @@ var myViewModel = function() {
               dataType: 'jsonp',
               success: function(results) {
                   console.log("SUCCESS! %o", results);
-                  // infWin.open(map, marker);
+                  var infoContent = '<div id="infWinframe" style=""><h1>' + results.name + '</h1>' + '<div><img src="' +
+                        results.rating_img_url + '"></div>' + '<h3>' + results.location.address +
+                        '</h3>' + '<div id="placeImage"><img src="' + results.image_url + '"></div>' + '<div id="reviewText">' + results.snippet_text + '</div></div>';
+
+                    infWin.setContent(infoContent);
+                    infWin.open(map, marker);
               },
               error: function(results) {
                   console.log("error %o", results);
+                    if (err) {
+                        infWin.setContent("No Yelp Information Available");
+                        infWin.open(map);
+                    }
               }
           }
           $.ajax(settings);
