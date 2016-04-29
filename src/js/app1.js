@@ -56,7 +56,7 @@ var myViewModel = function() {
           marker = new google.maps.Marker( {
               map: map,
               position: item.latlng,
-              title: item.name
+              title: item.id
           });
           item.marker = marker;
           self.markers.push(marker);
@@ -67,8 +67,12 @@ var myViewModel = function() {
               content: ''
           });
           item.addListener('click', function() {
-              getYelp();
-            //   infWin.open(map, this),
+              function yelpMe() {
+                  var yelpId = item.title;
+                //   console.log(yelpId);
+                  return getYelp(yelpId);
+              }
+              yelpMe();
               item.setAnimation(google.maps.Animation.BOUNCE);
               setTimeout(function() {
                   item.setAnimation(null)
@@ -98,7 +102,7 @@ var myViewModel = function() {
           });
       }, self);
 
-      var getYelp = function() {
+      var getYelp = function(placeId) {
           function nonce_generate() {
               return (Math.floor(Math.random() * 1e12).toString());
           };
@@ -111,7 +115,7 @@ var myViewModel = function() {
               oauth_signature_method: 'HMAC-SHA1',
               callback: 'cb',
           }
-          var url = 'https://api.yelp.com/v2/business/' + places[0].id;
+          var url = 'https://api.yelp.com/v2/business/' + placeId;
           var encodedSignature = oauthSignature.generate('GET', url, parameters, 'GfVqiQ93A_VPJ6Ir5H93FYBJtkE', 'vk1WWobdGt7kfeXPiS9YWt0NGZo');
           parameters.oauth_signature = encodedSignature;
 
