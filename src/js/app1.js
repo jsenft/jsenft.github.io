@@ -38,7 +38,7 @@ var places = [
 
 var myViewModel = function() {
     var self = this;
-    var map, infWin, marker;
+    var map, infWin, marker, yelpId;
     self.markers = [];
     self.query = ko.observable('');
     self.allPlaces = ko.observableArray(places);
@@ -56,27 +56,30 @@ var myViewModel = function() {
           marker = new google.maps.Marker( {
               map: map,
               position: item.latlng,
-              title: item.id
+              title: item.name
           });
+          yelpId = item.id;
           item.marker = marker;
           self.markers.push(marker);
+        //   infWin = new google.maps.InfoWindow({
+        //       content: item.id
+        //   });
       });
 
       self.markers.map(function(item) {
-          infWin = new google.maps.InfoWindow({
-              content: ''
-          });
+          infWin = new google.maps.InfoWindow();
           item.addListener('click', function() {
-              function yelpMe() {
-                  var yelpId = item.title;
-                //   console.log(yelpId);
-                  return getYelp(yelpId);
-              }
-              yelpMe();
               item.setAnimation(google.maps.Animation.BOUNCE);
               setTimeout(function() {
                   item.setAnimation(null)
               }, 1500);
+              self.yelpMe = ko.computed(function(place) {
+                  return ko.utils.arrayFilter(self.allPlaces(), function(place) {
+
+                      return getYelp(place.id);
+                  });
+                  self.yelpMe(item);
+              });
           });
       });
 
@@ -86,7 +89,19 @@ var myViewModel = function() {
             setTimeout(function() {
                 item.marker.setAnimation(null)
             }, 1500);
-            infWin.open(map, item.marker);
+            self.yelpMe = ko.computed(function(place) {
+                return ko.utils.arrayFilter(self.allPlaces(), function(place) {
+
+                    return getYelp(place.id);
+                });
+                self.yelpMe(item);
+            });
+            // function yelpMe() {
+                // var yelpId = item.id;
+                // return getYelp(yelpId);
+            // }
+            // yelpMe();
+            // infWin.open(map, item.marker);
           }
       }
 
@@ -126,18 +141,15 @@ var myViewModel = function() {
               dataType: 'jsonp',
               success: function(results) {
                   console.log("SUCCESS! %o", results);
-                  var infoContent = '<div id="infWinframe" style=""><h1>' + results.name + '</h1>' + '<div><img src="' +
-                        results.rating_img_url + '"></div>' + '<h3>' + results.location.address +
-                        '</h3>' + '<div id="placeImage"><img src="' + results.image_url + '"></div>' + '<div id="reviewText">' + results.snippet_text + '</div></div>';
-
+                  var infoContent = '<div id="infWinFrame" style=""><h1>' + results.name + '</h1>' + '<div><img src="' + results.rating_img_url + '"></div>' + '<h3>' + results.location.address + '</h3><h3>' + results.display_phone + '</h3>' + '<div id="placeImage"><img src="' + results.image_url + '"></div>' + '<div id="reviewText">' + results.snippet_text + '</div></div>';
                     infWin.setContent(infoContent);
                     infWin.open(map, marker);
               },
               error: function(results) {
                   console.log("error %o", results);
-                    if (err) {
+                    if (results) {
                         infWin.setContent("No Yelp Information Available");
-                        infWin.open(map);
+                        infWin.open(map, marker);
                     }
               }
           }
