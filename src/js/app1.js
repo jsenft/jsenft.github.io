@@ -58,29 +58,39 @@ var myViewModel = function() {
               position: item.latlng,
               title: item.name
           });
-          yelpId = item.id;
+          marker.id = item.id;
           item.marker = marker;
           self.markers.push(marker);
-        //   infWin = new google.maps.InfoWindow({
-        //       content: item.id
-        //   });
       });
 
       self.markers.map(function(item) {
           infWin = new google.maps.InfoWindow();
-          item.addListener('click', function() {
-              item.setAnimation(google.maps.Animation.BOUNCE);
-              setTimeout(function() {
-                  item.setAnimation(null)
-              }, 1500);
-              self.yelpMe = ko.computed(function(place) {
-                  return ko.utils.arrayFilter(self.allPlaces(), function(place) {
-
-                      return getYelp(place.id);
-                  });
-                  self.yelpMe(item);
-              });
-          });
+        //   item.addListener('click', function() {
+        //       item.setAnimation(google.maps.Animation.BOUNCE);
+        //       setTimeout(function() {
+        //           item.setAnimation(null)
+        //       }, 1500);
+          function yelpMe(info) {
+              return function(info) {
+                  item.setAnimation(google.maps.Animation.BOUNCE);
+                  setTimeout(function() {
+                      item.setAnimation(null)
+                  }, 1500);
+                  getYelp(this.id);
+              }
+          }
+          item.addListener('click', yelpMe(infWin));
+            //   function yelpMe() {
+            //       return getYelp(yelpId);
+            //   }
+            //   yelpMe();
+            //   self.yelpMe = ko.computed(function(place) {
+            //       return ko.utils.arrayFilter(self.allPlaces(), function(place) {
+            //           return getYelp(place.id);
+            //       });
+            //       self.yelpMe(item);
+            //   });
+        //   });
       });
 
       self.listClick = function(item) {
@@ -89,19 +99,7 @@ var myViewModel = function() {
             setTimeout(function() {
                 item.marker.setAnimation(null)
             }, 1500);
-            self.yelpMe = ko.computed(function(place) {
-                return ko.utils.arrayFilter(self.allPlaces(), function(place) {
-
-                    return getYelp(place.id);
-                });
-                self.yelpMe(item);
-            });
-            // function yelpMe() {
-                // var yelpId = item.id;
-                // return getYelp(yelpId);
-            // }
-            // yelpMe();
-            // infWin.open(map, item.marker);
+            // Infowindow stuff goes here.
           }
       }
 
@@ -117,7 +115,7 @@ var myViewModel = function() {
           });
       }, self);
 
-      var getYelp = function(placeId) {
+      function getYelp(placeId) {
           function nonce_generate() {
               return (Math.floor(Math.random() * 1e12).toString());
           };
