@@ -38,7 +38,7 @@ var places = [
 
 var myViewModel = function() {
     var self = this;
-    var map, infWin, marker, yelpId;
+    var map, infWin, marker, currentMarker;
     self.markers = [];
     self.query = ko.observable('');
     self.allPlaces = ko.observableArray(places);
@@ -48,7 +48,7 @@ var myViewModel = function() {
           center: {lat: 39.695, lng: -104.991},
           zoom: 14,
       });
-      google.maps.event.addListener(map,'click',function() {
+      google.maps.event.addListener(map,'click', function() {
           infWin.close();
       });
 
@@ -65,32 +65,17 @@ var myViewModel = function() {
 
       self.markers.map(function(item) {
           infWin = new google.maps.InfoWindow();
-        //   item.addListener('click', function() {
-        //       item.setAnimation(google.maps.Animation.BOUNCE);
-        //       setTimeout(function() {
-        //           item.setAnimation(null)
-        //       }, 1500);
           function yelpMe(info) {
               return function(info) {
                   item.setAnimation(google.maps.Animation.BOUNCE);
                   setTimeout(function() {
                       item.setAnimation(null)
                   }, 1500);
+                  currentMarker = item;
                   getYelp(this.id);
               }
           }
           item.addListener('click', yelpMe(infWin));
-            //   function yelpMe() {
-            //       return getYelp(yelpId);
-            //   }
-            //   yelpMe();
-            //   self.yelpMe = ko.computed(function(place) {
-            //       return ko.utils.arrayFilter(self.allPlaces(), function(place) {
-            //           return getYelp(place.id);
-            //       });
-            //       self.yelpMe(item);
-            //   });
-        //   });
       });
 
       self.listClick = function(item) {
@@ -99,7 +84,8 @@ var myViewModel = function() {
             setTimeout(function() {
                 item.marker.setAnimation(null)
             }, 1500);
-            // Infowindow stuff goes here.
+            currentMarker = item.marker;
+            getYelp(item.id);
           }
       }
 
@@ -141,13 +127,13 @@ var myViewModel = function() {
                   console.log("SUCCESS! %o", results);
                   var infoContent = '<div id="infWinFrame" style=""><h1>' + results.name + '</h1>' + '<div><img src="' + results.rating_img_url + '"></div>' + '<h3>' + results.location.address + '</h3><h3>' + results.display_phone + '</h3>' + '<div id="placeImage"><img src="' + results.image_url + '"></div>' + '<div id="reviewText">' + results.snippet_text + '</div></div>';
                     infWin.setContent(infoContent);
-                    infWin.open(map, marker);
+                    infWin.open(map, currentMarker);
               },
               error: function(results) {
                   console.log("error %o", results);
                     if (results) {
                         infWin.setContent("No Yelp Information Available");
-                        infWin.open(map, marker);
+                        infWin.open(map, currentMarker);
                     }
               }
           }
