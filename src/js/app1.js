@@ -1,37 +1,44 @@
 var places = [
     {
-        name      : 'Adelitas Cocina Y Cantina',
+        name      : 'Adelitas Cocina y Cantina',
         id        : 'B5GgKhPREBgipv8kfSOluw',
+        web       : 'http://www.adelitasdenver.com/',
         latlng    : {lat: 39.693269, lng: -104.987079}
     },
     {
         name      : 'The Hornet',
         id        : 'QmgLDVzZl_91e3-GceV-5w',
+        web       : 'http://hornetrestaurant.com/',
         latlng    : {lat: 39.718130, lng: -104.987261}
     },
     {
         name      : 'Sushi Den',
         id        : '8lKL5Bxt620aqh0ulDByIg',
+        web       : 'http://www.sushiden.net/',
         latlng    : {lat: 39.689548, lng: -104.980744}
     },
     {
         name      : 'Kaos Pizzaria',
         id        : 't2xnzRv93FTEvDnWQxYBkg',
+        web       : 'https://kaospizzeria.com/',
         latlng    : {lat: 39.69048, lng: -104.980636}
     },
     {
         name      : 'Park Burger Pearl',
         id        : 'JSNizJSuj0gZ594nBXhVWQ',
+        web       : 'http://www.parkburger.com/',
         latlng    : {lat: 39.682267, lng: -104.980374}
     },
     {
         name      : 'Gaia Bistro',
         id        : 'NztM8WhkcZiHyn_NGqWN5Q',
+        web       : 'http://www.gaiabistro.com/',
         latlng    : {lat: 39.688423, lng: -104.980606}
     },
     {
-        name      : 'Devils Food',
+        name      : 'Devils Food Bakery & Cookery',
         id        : '4DE8RY7jkako7ADqpnAd3w',
+        web       : 'http://www.devilsfooddenver.com/',
         latlng    : {lat: 39.697947, lng: -104.961488}
     }
 ];
@@ -45,11 +52,21 @@ var myViewModel = function() {
 
     var initMap = function() {
       map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 39.695, lng: -104.991},
+          center: {lat: 39.695291, lng: -104.979265},
           zoom: 14,
       });
+
+      var bounds = new google.maps.LatLngBounds({ lat: 39.678447, lng: -104.993143 }, { lat: 39.725502, lng: -104.959331 });
+
+      google.maps.event.addDomListener(window, 'resize', function(){
+          map.fitBounds(bounds);
+          map.setZoom(13);
+      });
+
       google.maps.event.addListener(map,'click', function() {
           infWin.close();
+          map.fitBounds(bounds);
+          map.setCenter({lat: 39.693490, lng: -104.979265});
       });
 
       self.allPlaces().forEach(function(item) {
@@ -59,6 +76,7 @@ var myViewModel = function() {
               title: item.name
           });
           marker.id = item.id;
+          marker.web = item.web;
           item.marker = marker;
           self.markers.push(marker);
       });
@@ -86,10 +104,11 @@ var myViewModel = function() {
             }, 1500);
             currentMarker = item.marker;
             getYelp(item.id);
-          }
+            }
       }
 
       self.search = ko.computed(function() {
+          infWin.close();
           return ko.utils.arrayFilter(self.allPlaces(), function(location) {
               if (location.name.toLowerCase().indexOf(self.query().toLowerCase()) >= 0) {
                   location.marker.setVisible(true);
@@ -123,22 +142,35 @@ var myViewModel = function() {
               data: parameters,
               cache: true,
               dataType: 'jsonp',
+              timeout: 1000,
               success: function(results) {
                   console.log("SUCCESS! %o", results);
-                  var infoContent = '<div id="infWinFrame" style=""><h1>' + results.name + '</h1>' + '<div><img src="' + results.rating_img_url + '"></div>' + '<h3>' + results.location.address + '</h3><h3>' + results.display_phone + '</h3>' + '<div id="placeImage"><img src="' + results.image_url + '"></div>' + '<div id="reviewText">' + results.snippet_text + '</div></div>';
-                    infWin.setContent(infoContent);
-                    infWin.open(map, currentMarker);
+                  var infoContent = '<div id="infoFrame" style=""><h1>' + results.name + '</h1>' + '<div><img src="' + results.rating_img_url + '"></div>' + '<h3>' + results.location.address + '</h3><h3>' + results.display_phone + '</h3><a href="' + currentMarker.web + '" target="_blank">' + currentMarker.web + '</a><hr><div id="placeImage"><img src="' + results.image_url + '"></div>' + '<div id="reviewText">' + results.snippet_text + '</div><hr><div><a href="' + results.url + '" target="_blank">Go to Yelp Page</a></div><div><img src="img/yelp_powered_btn_red.png"></div></div>';
+                  infWin.setContent(infoContent);
+                  infWin.open(map, currentMarker);
               },
-              error: function(results) {
-                  console.log("error %o", results);
-                    if (results) {
-                        infWin.setContent("No Yelp Information Available");
-                        infWin.open(map, currentMarker);
-                    }
+              error: function() {
+                  infWin.setContent("Sorry, No Yelp Information Available");
+                  infWin.open(map, currentMarker);
               }
           }
           $.ajax(settings);
       }
-    }();
+  }();
 }
-ko.applyBindings(new myViewModel());
+
+function googleError() {
+    $("h2").hide();
+    $("p").hide();
+    $("input").hide();
+    $("li").hide();
+    $("header").append('<h1>Oops! Something went wrong!</h1>');
+}
+function googleSuccess() {
+    if (typeof google !== 'undefined' || google === null) {
+        ko.applyBindings(new myViewModel());
+    }
+    else {
+        googleError();
+    }
+}
