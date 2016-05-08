@@ -50,6 +50,7 @@ var myViewModel = function() {
     self.query = ko.observable('');
     self.allPlaces = ko.observableArray(places);
 
+    //--------Initaillize map with options----------------//
     var mapCenter = {lat: 39.695291, lng: -104.979265};
     var initMap = function() {
       map = new google.maps.Map(document.getElementById('map_canvas'), {
@@ -69,6 +70,7 @@ var myViewModel = function() {
           map.setCenter(mapCenter);
       });
 
+      //-------Create map markers and push to storage array ---------------//
       self.allPlaces().forEach(function(item) {
           marker = new google.maps.Marker( {
               map: map,
@@ -81,6 +83,7 @@ var myViewModel = function() {
           self.markers.push(marker);
       });
 
+      //---Function that builds InfoWindow on click and generates call to Yelp for content ----//
       self.markers.map(function(item) {
           infWin = new google.maps.InfoWindow({
               maxWidth: 260
@@ -98,6 +101,7 @@ var myViewModel = function() {
           item.addListener('click', yelpMe(infWin));
       });
 
+      //---Function that sets current marker on click and generates call to Yelp to populate InfoWindow --//
       self.listClick = function(item) {
           if (this.name) {
             item.marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -109,6 +113,7 @@ var myViewModel = function() {
             }
       }
 
+      //---Function that filters through list based on user entry ------------//
       self.search = ko.computed(function() {
           infWin.close();
           return ko.utils.arrayFilter(self.allPlaces(), function(location) {
@@ -122,6 +127,7 @@ var myViewModel = function() {
           });
       }, self);
 
+      //----This is called when a list item or marker is clicked on to call Yelp for content-----//
       function getYelp(placeId) {
           function nonce_generate() {
               return (Math.floor(Math.random() * 1e12).toString());
@@ -146,7 +152,7 @@ var myViewModel = function() {
               dataType: 'jsonp',
               timeout: 1000,
               success: function(results) {
-                  var infoContent = '<div id="infwin" class="col-md-9"><h3>' + results.name + '</h3>' + '<div><img src="' + results.rating_img_url + '"></div>' + '<h4>' + results.location.address + '</h4><h4>' + results.display_phone + '</h4><a href="' + currentMarker.web + '" target="_blank">' + currentMarker.web + '</a><hr><div id="placeImg"><img src="' + results.image_url + '" class="img-responsive"></div>' + '<div id="reviewText">' + results.snippet_text + '</div><hr><div><a href="' + results.url + '" target="_blank">Go to Yelp Page</a></div><div><img src="img/yelp_powered_btn_red.png"></div></div>';
+                  var infoContent = '<div class="col-md-9"><h3>' + results.name + '</h3>' + '<div><img src="' + results.rating_img_url + '"></div>' + '<h4>' + results.location.address + '</h4><h4>' + results.display_phone + '</h4><a href="' + currentMarker.web + '" target="_blank">' + currentMarker.web + '</a><hr><div><img src="' + results.image_url + '" class="img-responsive"></div>' + '<div>' + results.snippet_text + '</div><hr><div><a href="' + results.url + '" target="_blank">Go to Yelp Page</a></div><div><img src="img/yelp_powered_btn_red.png"></div></div>';
                   infWin.setContent(infoContent);
                   infWin.open(map, currentMarker);
               },
@@ -160,6 +166,7 @@ var myViewModel = function() {
   }();
 }
 
+//----Error function hides unnecessary DOM elements on map errors--------//
 function googleError() {
     $("h2").hide();
     $("p").hide();
@@ -167,6 +174,8 @@ function googleError() {
     $("li").hide();
     $("header").append('<h1>Sorry, Google Maps has failed to load!</h1>');
 }
+
+//----Checks if initial map object is defined before running Viewmodel-----------//
 function googleSuccess() {
     if (typeof google !== 'undefined' || google === null) {
         ko.applyBindings(new myViewModel());
