@@ -50,7 +50,7 @@ var myViewModel = function() {
     self.query = ko.observable('');
     self.allPlaces = ko.observableArray(places);
 
-    //--------Initaillize map with options----------------//
+    //--------Initialize map with parameters----------------//
     var mapCenter = {lat: 39.695291, lng: -104.979265};
     var initMap = function() {
       map = new google.maps.Map(document.getElementById('map_canvas'), {
@@ -60,17 +60,19 @@ var myViewModel = function() {
 
       var bounds = new google.maps.LatLngBounds({ lat: 39.678447, lng: -104.993143 }, { lat: 39.725502, lng: -104.959331 });
 
+      //------Modifies map boundaries when viewport is resized-----------//
       google.maps.event.addDomListener(window, 'resize', function(){
           map.fitBounds(bounds);
           map.setZoom(13);
       });
 
+      //-----Closes InfoWindow and reset map center when map is clicked----//
       google.maps.event.addListener(map,'click', function() {
           infWin.close();
           map.setCenter(mapCenter);
       });
 
-      //-------Create map markers and push to storage array ---------------//
+      //-----Create map markers and push to storage array ------------//
       self.allPlaces().forEach(function(item) {
           marker = new google.maps.Marker( {
               map: map,
@@ -83,7 +85,7 @@ var myViewModel = function() {
           self.markers.push(marker);
       });
 
-      //---Function that builds InfoWindow on click and generates call to Yelp for content ----//
+      //---Function builds InfoWindow on click and generates call to Yelp for content ----//
       self.markers.map(function(item) {
           infWin = new google.maps.InfoWindow({
               maxWidth: 260
@@ -101,7 +103,7 @@ var myViewModel = function() {
           item.addListener('click', yelpMe(infWin));
       });
 
-      //---Function that sets current marker on click and generates call to Yelp to populate InfoWindow --//
+      //---Function sets current marker on click and generates call to Yelp to populate InfoWindow --//
       self.listClick = function(item) {
           if (this.name) {
             item.marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -113,7 +115,7 @@ var myViewModel = function() {
             }
       }
 
-      //---Function that filters through list based on user entry ------------//
+      //---Function filters through list based on user entry ------------//
       self.search = ko.computed(function() {
           infWin.close();
           return ko.utils.arrayFilter(self.allPlaces(), function(location) {

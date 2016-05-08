@@ -10,6 +10,8 @@ This project uses the following:
 - [Yelp API](https://www.yelp.com/developers/documentation/v2/overview)
 - [Bootstrap](http://getbootstrap.com/css/#overview)
 
+Potentially, QUIC errors could occur using Chrome if this experimental protocol is enabled. To disable this, click [here](chrome://flags/#enable-quic) and set flag to "Disabled".
+
 Additionally, I would not have gotten through this project without the help of the Udacity forums and their generous contributors.
 
 ##About
