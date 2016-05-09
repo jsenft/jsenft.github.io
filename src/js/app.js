@@ -154,7 +154,7 @@ var myViewModel = function() {
               dataType: 'jsonp',
               timeout: 1000,
               success: function(results) {
-                  var infoContent = '<div class="col-md-9"><h3>' + results.name + '</h3>' + '<div><img src="' + results.rating_img_url + '"></div>' + '<h4>' + results.location.address + '</h4><h4>' + results.display_phone + '</h4><a href="' + currentMarker.web + '" target="_blank">' + currentMarker.web + '</a><hr><div><img src="' + results.image_url + '" class="img-responsive"></div>' + '<div>' + results.snippet_text + '</div><hr><div><a href="' + results.url + '" target="_blank">Go to Yelp Page</a></div><div><img src="img/yelp_powered_btn_red.png"></div></div>';
+                  var infoContent = '<div><h3>' + results.name + '</h3>' + '<div><img src="' + results.rating_img_url + '"></div>' + '<h4>' + results.location.address + '</h4><h4>' + results.display_phone + '</h4><a href="' + currentMarker.web + '" target="_blank">' + currentMarker.web + '</a><hr><div><img src="' + results.image_url + '" class="img-responsive"></div>' + '<div>' + results.snippet_text + '</div><hr><div><a href="' + results.url + '" target="_blank">Go to Yelp Page</a></div><div><img src="img/yelp_powered_btn_red.png"></div></div>';
                   infWin.setContent(infoContent);
                   infWin.open(map, currentMarker);
               },
