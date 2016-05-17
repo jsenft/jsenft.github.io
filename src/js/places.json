@@ -1,44 +1,51 @@
-{ "places" : [
+{ "places"  : [
     {
         "name"      : "Adelitas Cocina Y Cantina",
         "id"        : "B5GgKhPREBgipv8kfSOluw",
         "web"       : "http://www.adelitasdenver.com/",
-        "latlng"    : "{lat: 39.693269, lng: -104.987079}"
+        "lat"       : "39.693269",
+        "lng"       : "-104.987079"
     },
     {
         "name"      : "The Hornet",
         "id"        : "QmgLDVzZl_91e3-GceV-5w",
         "web"       : "http://hornetrestaurant.com/",
-        "latlng"    : "{lat: 39.718130, lng: -104.987261}"
+        "lat"       : "39.718130",
+        "lng"       : "-104.987261"
     },
     {
         "name"      : "Sushi Den",
         "id"        : "8lKL5Bxt620aqh0ulDByIg",
         "web"       : "http://www.sushiden.net/",
-        "latlng"    : "{lat: 39.689548, lng: -104.980744}"
+        "lat"       : "39.689548",
+        "lng"       : "-104.980744"
     },
     {
         "name"      : "Kaos Pizzaria",
         "id"        : "t2xnzRv93FTEvDnWQxYBkg",
         "web"       : "https://kaospizzeria.com/",
-        "latlng"    : "{lat: 39.69048, lng: -104.980636}"
+        "lat"       : "39.69048",
+        "lng"       : "-104.980636"
     },
     {
         "name"      : "Park Burger Pearl",
         "id"        : "JSNizJSuj0gZ594nBXhVWQ",
         "web"       : "http://www.parkburger.com/",
-        "latlng"    : "{lat: 39.682267, lng: -104.980374}"
+        "lat"       : "39.682267",
+        "lng"       : "-104.980374"
     },
     {
         "name"      : "Gaia Bistro",
         "id"        : "NztM8WhkcZiHyn_NGqWN5Q",
         "web"       : "http://www.gaiabistro.com/",
-        "latlng"    : "{lat: 39.688423, lng: -104.980606}"
+        "lat"       : "39.688423",
+        "lng"       : "-104.980606"
     },
     {
         "name"      : "Devils Food",
         "id"        : "4DE8RY7jkako7ADqpnAd3w",
         "web"       : "http://www.devilsfooddenver.com/",
-        "latlng"    : "{lat: 39.697947, lng: -104.961488}"
+        "lat"       : "39.697947",
+        "lng"       : "-104.961488"
     }
 ]}

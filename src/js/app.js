@@ -74,6 +74,11 @@ var myViewModel = function() {
 
       //-----Create map markers and push to storage array ------------//
       self.allPlaces().forEach(function(item) {
+        //   var newLl = item.latlng.replace(/["]+/g, '');
+        //   $.JSON.parse(item.latlng);
+        //   var latlng = {};
+        //   latlng.lat = parseFloat(item.lat);
+        //   latlng.lng = parseFloat(item.lng);
           marker = new google.maps.Marker( {
               map: map,
               position: item.latlng,
@@ -171,16 +176,22 @@ var myViewModel = function() {
 //----Error function hides unnecessary DOM elements on map errors--------//
 function googleError() {
     $("h2").hide();
-    $("p").hide();
     $("input").hide();
-    $("li").hide();
+    $(".form-group").hide();
+    $(".map-container").hide();
+
     $("header").append('<h1>Sorry, Google Maps has failed to load!</h1>');
 }
 
 //----Checks if initial map object is defined before running Viewmodel-----------//
 function googleSuccess() {
     if (typeof google !== 'undefined' || google === null) {
-        ko.applyBindings(new myViewModel());
+
+        // $.getJSON("js/places.json", function(data) {
+        //     myData = JSON.parse(data);
+        //     console.log(myData);
+            ko.applyBindings(new myViewModel());
+        // });
     }
     else {
         googleError();

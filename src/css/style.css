@@ -6,6 +6,8 @@
     display: block;
     width: 100%;
     height: 500px;
+    border: thin solid grey;
+    box-shadow: 10px 5px 10px grey;
 }
 
 @media (max-width: @screen-xs-max) {
