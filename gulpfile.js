@@ -40,12 +40,4 @@ gulp.task('copyCss', function() {
         .pipe(gulp.dest('dist/css/'));
 });
 
-gulp.task('copyHtml', function() {
-    return gulp.src('src/*.html')
-        .pipe(rename({
-          extname: '.html'
-        }))
-        .pipe(gulp.dest('dist/'));
-});
-
-gulp.task('default', ['js', 'jshint', 'copyCss', 'copyHtml']);
+gulp.task('default', ['js', 'jshint', 'copyCss']);
