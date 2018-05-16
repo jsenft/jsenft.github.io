@@ -1,9 +1,9 @@
 # Neighborhood Map Project
 
-##To Run
+## To Run
 To run the project, open: /dist/index.html
 
-##Attributions
+## Attributions
 This project uses the following:
 - [Knockout JS framework](http://knockoutjs.com/)
 - [Google Maps API](https://developers.google.com/maps/)
@@ -14,5 +14,5 @@ Potentially, QUIC errors could occur using Chrome if this experimental protocol 
 
 Additionally, I would not have gotten through this project without the help of the Udacity forums and their generous contributors.
 
-##About
+## About
 This project is part of Udacity's Front-End Web Developer Nanodegree.
