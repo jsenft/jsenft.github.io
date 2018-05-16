@@ -1,7 +1,7 @@
 # Neighborhood Map Project
 
 ## To Run
-To run the project, open: /dist/index.html
+To run the project, click on the link above under the header tabs.
 
 ## Attributions
 This project uses the following:
