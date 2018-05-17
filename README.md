@@ -1,7 +1,7 @@
 # Neighborhood Map Project
 
 ## To Run
-To run the project, open: /dist/index.html
+To run the project, switch to the gh-pages branch, then click the link above, below the header tabs.
 
 ## Attributions
 This project uses the following:
